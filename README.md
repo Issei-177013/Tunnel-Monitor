@@ -1,6 +1,12 @@
-# Tunnel Monitor
+<p align="center">
+  <a href="./README.md">English</a> |
+  <a href="./README-FA.md">فارسی</a>
+</p>
+<h1 align="center">Tunnel Monitor</h1>
 
-This repository contains a bash script for monitoring IPv6 tunnels on a Linux server. The script pings connected servers via their IPv6 addresses and is designed to be scheduled using cron jobs.
+
+
+Tunnel Monitor is a bash script for monitoring IPv6 tunnels on a Linux server. The script pings connected servers via their IPv6 addresses and is designed to be scheduled using cron jobs.
 
 ## Features
 
