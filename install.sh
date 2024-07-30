@@ -40,6 +40,12 @@ validate_cron_schedule() {
 install_script() {
     log_message "Starting script installation."
 
+    # Ensure the script directory exists
+    if [ ! -d "$SCRIPT_DIR" ]; then
+        mkdir -p "$SCRIPT_DIR"
+        handle_error $? "Failed to create directory $SCRIPT_DIR."
+    fi
+
     # Create the script content
     read -r -d '' SCRIPT_CONTENT << 'EOF'
 #!/bin/bash
