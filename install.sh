@@ -3,7 +3,6 @@
 # Define variables
 SCRIPT_DIR="/opt/Tunnel-Monitors"
 SCRIPT_NAME="tunnel_monitor.sh"
-CRON_JOB_FILE="/etc/cron.d/tunnel_monitor"
 CRON_JOB="0 */6 * * * root /opt/Tunnel-Monitors/tunnel_monitor.sh"
 LOG_FILE="/var/log/tunnel_monitor.log"
 
@@ -67,7 +66,7 @@ EOF
     chmod +x $SCRIPT_DIR/$SCRIPT_NAME
 
     # Create a cron job
-    echo "$CRON_JOB" | sudo tee $CRON_JOB_FILE > /dev/null
+    echo "$CRON_JOB" | crontab -
 
     log_message "Script installed and cron job created successfully."
     echo "Installation complete. The script has been installed to $SCRIPT_DIR and a cron job has been created to run it every 6 hours."
