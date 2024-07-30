@@ -4,7 +4,7 @@
 SCRIPT_DIR="/opt/Tunnel-Monitors"
 SCRIPT_NAME="tunnel_monitor.sh"
 CRON_JOB_FILE="/etc/cron.d/tunnel_monitor"
-CRON_JOB="0 */6 * * * root /opt/tunnel_monitor.sh"
+CRON_JOB="0 */6 * * * root /opt/Tunnel-Monitors/tunnel_monitor.sh"
 LOG_FILE="/var/log/tunnel_monitor.log"
 
 # Function to log messages
@@ -27,7 +27,7 @@ handle_error() {
 # Function to validate cron schedule
 validate_cron_schedule() {
     local schedule=$1
-    if [[ ! "$schedule" =~ ^[0-9]{1,2} [0-9]{1,2} [0-9]{1,2} [0-9]{1,2} [0-9]{1,2} ]]; then
+    if [[ ! "$schedule" =~ ^[0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+$ ]]; then
         echo "Invalid cron schedule format. It should be in the format 'min hour day month day-of-week'."
         return 1
     fi
