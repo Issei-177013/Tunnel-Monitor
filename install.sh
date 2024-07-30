@@ -4,7 +4,6 @@
 SCRIPT_DIR="/opt/Tunnel-Monitors"
 SCRIPT_NAME="tunnel_monitor.sh"
 CRON_JOB="0 */6 * * * root /opt/Tunnel-Monitors/tunnel_monitor.sh"
-LOG_FILE="/var/log/tunnel_monitor.log"
 
 
     # Ensure the script directory exists
@@ -14,48 +13,50 @@ fi
 
 # Create the script content
 read -r -d '' SCRIPT_CONTENT << 'EOF'
-#!/bin/bash
+  #!/bin/bash
 
-# Function to get the connected IPv6 address
-get_connected_ipv6() {
-    local ipv6_addr=$1
-    local base_addr=$(echo $ipv6_addr | sed 's/:[0-9a-f]*$//')
-    local last_segment=$(echo $ipv6_addr | awk -F: '{print $NF}')
+  SCRIPT_DIR="/opt/Tunnel-Monitors"
+  SCRIPT_NAME="tunnel_monitor.sh"
+  LOG_FILE="/var/log/tunnel_monitor.log"
 
-    if [[ "$last_segment" == "1" ]]; then
-        echo "${base_addr}:2"
-    elif [[ "$last_segment" == "2" ]]; then
-        echo "${base_addr}:1"
-    else
-        log "error" "Unknown segment: $last_segment for IPv6 address $ipv6_addr"
-        return 1
-    fi
-}
+  # Function to log messages
+  log_message() {
+      local message=$1
+      echo "$(date +'%Y-%m-%d %H:%M:%S') - $message" >> $LOG_FILE
+  }
 
-# Simple logging function
-log() {
-    local level=$1
-    local message=$2
-    timestamp=$(date +%Y-%m-%d_%H:%M:%S)
-    echo "$timestamp $level: $message"
-}
+  # Function to get the connected IPv6 address
+  get_connected_ipv6() {
+      local ipv6_addr=$1
+      local base_addr=$(echo $ipv6_addr | sed 's/:[0-9a-f]*$//')
+      local last_segment=$(echo $ipv6_addr | awk -F: '{print $NF}')
 
-# Find interfaces with 'tun' or 'tunnel' in their name and get their IPv6 addresses
-interfaces=$(ip -6 addr show | grep -E 'tun|tunnel' | grep -oP '(?<=inet6 )[^/]+(?= scope global)')
+      if [[ "$last_segment" == "1" ]]; then
+          echo "${base_addr}:2"
+      elif [[ "$last_segment" == "2" ]]; then
+          echo "${base_addr}:1"
+      else
+          log_message  "error" "Unknown segment: $last_segment for IPv6 address $ipv6_addr"
+          return 1
+      fi
+  }
 
-# Ping the connected server's IPv6 address
-for ipv6_addr in $interfaces; do
-    connected_ipv6=$(get_connected_ipv6 $ipv6_addr)
-    if [ ! -z "$connected_ipv6" ]; then
-        log "info" "Pinging connected server's IPv6 address $connected_ipv6 from local IPv6 address $ipv6_addr"
-        ping6 -c 5 $connected_ipv6 > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            log "info" "Ping to $connected_ipv6 successful"
-        else
-            log "error" "Ping to $connected_ipv6 failed"
-        fi
-    fi
-done
+  # Find interfaces with 'tun' or 'tunnel' in their name and get their IPv6 addresses
+  interfaces=$(ip -6 addr show | grep -E 'tun|tunnel' | grep -oP '(?<=inet6 )[^/]+(?= scope global)')
+
+  # Ping the connected server's IPv6 address
+  for ipv6_addr in $interfaces; do
+      connected_ipv6=$(get_connected_ipv6 $ipv6_addr)
+      if [ ! -z "$connected_ipv6" ]; then
+          log_message  "info" "Pinging connected server's IPv6 address $connected_ipv6 from local IPv6 address $ipv6_addr"
+          ping6 -c 5 $connected_ipv6 > /dev/null 2>&1
+          if [ $? -eq 0 ]; then
+              log_message  "info" "Ping to $connected_ipv6 successful"
+          else
+              log_message  "error" "Ping to $connected_ipv6 failed"
+          fi
+      fi
+  done
 
 EOF
 
