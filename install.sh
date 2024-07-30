@@ -27,8 +27,10 @@ handle_error() {
 # Function to validate cron schedule
 validate_cron_schedule() {
     local schedule=$1
-    if [[ ! "$schedule" =~ ^[0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+$ ]]; then
-        echo "Invalid cron schedule format. It should be in the format 'min hour day month day-of-week'."
+    # Check if the schedule has exactly 5 fields
+    local fields=$(echo "$schedule" | awk '{print NF}')
+    if [ "$fields" -ne 5 ]; then
+        echo "Invalid cron schedule format. It should have 5 fields: 'min hour day month day-of-week'."
         return 1
     fi
     return 0
