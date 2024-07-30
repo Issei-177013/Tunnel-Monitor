@@ -36,7 +36,7 @@ read -r -d '' SCRIPT_CONTENT << 'EOF'
       elif [[ "$last_segment" == "2" ]]; then
           echo "${base_addr}:1"
       else
-          log_message "error" "Unknown segment: $last_segment for IPv6 address $ipv6_addr"
+          log_message "Unknown segment: $last_segment for IPv6 address $ipv6_addr"
           return 1
       fi
   }
@@ -48,12 +48,12 @@ read -r -d '' SCRIPT_CONTENT << 'EOF'
   for ipv6_addr in $interfaces; do
       connected_ipv6=$(get_connected_ipv6 $ipv6_addr)
       if [ ! -z "$connected_ipv6" ]; then
-          log_message "info" "Pinging connected server's IPv6 address $connected_ipv6 from local IPv6 address $ipv6_addr"
+          log_message "Pinging connected server's IPv6 address $connected_ipv6 from local IPv6 address $ipv6_addr"
           ping6 -c 5 $connected_ipv6 > /dev/null 2>&1
           if [ $? -eq 0 ]; then
-              log_message "info" "Ping to $connected_ipv6 successful"
+              log_message "Ping to $connected_ipv6 successful"
           else
-              log_message "error" "Ping to $connected_ipv6 failed"
+              log_message "Ping to $connected_ipv6 failed"
           fi
       fi
   done
