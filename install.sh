@@ -89,7 +89,7 @@ EOF
     handle_error $? "Failed to make the script executable."
 
     # Create a cron job
-    echo "$CRON_JOB" > $CRON_JOB_FILE
+    echo "$CRON_JOB" | sudo tee $CRON_JOB_FILE > /dev/null
     handle_error $? "Failed to create cron job file $CRON_JOB_FILE."
 
     log_message "Script installed and cron job created successfully."
