@@ -69,6 +69,5 @@ EOF
     # Create a cron job
     echo "$CRON_JOB" | crontab -
 
-    log_message "Script installed and cron job created successfully."
     echo "Installation complete. The script has been installed to $SCRIPT_DIR and a cron job has been created to run it every 6 hours."
 
